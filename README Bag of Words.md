@@ -4,7 +4,7 @@ In this document, we will explain the actions that were codyfied to create a bag
 
 1. How to run this code? 
 
-You can find the code with the name ""
+You can find the code with the name "Bag of words"
 
 2. What the script does?
 
