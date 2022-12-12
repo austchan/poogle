@@ -23,7 +23,7 @@ poems2_df_sample
 
 #### Elaborate process for all poems: 
     
-for index, row in poems2_df_sample.iterrows(): #if you apply a sample, it is necessary to change this part to: poems2_df_sample
+for index, row in poems2_df_sample.iterrows(): 
     # Create strign with each poem
     cell = row['Content']
     # execute the text here as :
