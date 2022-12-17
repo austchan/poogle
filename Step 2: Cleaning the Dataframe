@@ -48,3 +48,7 @@ poems_df.head()
 def lemmatize_text(clean_poems):
     return [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(clean_poems)]
 poems_df['clean_poems'] = poems_df.clean_poems.apply(lemmatize_text)
+
+#Converting Dataframe to XLS
+poems2_df = pd.DataFrame(poems_df)
+poems2_df.to_excel('Clean_Poems.xlsx', index=False, header=True)
