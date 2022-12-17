@@ -1,0 +1,50 @@
+#Required Packages
+import pandas as pd
+import string
+import seaborn as sns
+import matplotlib.pyplot as plt
+import collections
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.sentiment import SentimentIntensityAnalyzer
+nltk.download('punkt')
+lemmatizer = nltk.stem.WordNetLemmatizer()
+w_tokenizer = nltk.tokenize.WhitespaceTokenizer()
+nltk.download('wordnet') 
+nltk.download('vader_lexicon')
+nltk.download('omw-1.4')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('punkt')
+nltk.download('stopwords')
+
+#Import the Dataframe
+poems_df = pd.read_csv(r'/Users/neerajtomsavio/Downloads/poems_df.csv') #Insert the filepath
+
+#Check the Dataframe
+poems_df.head()
+poems_df.info()
+
+#Droping NAs and converting column values to a string
+poems_df['Content'] = poems_df['Content'].astype('string')
+poems_df = poems_df.dropna()
+print(poems_df.info())
+
+#Lowercase
+poems_df['clean_poems'] = poems_df['Content'].str.lower()
+poems_df['clean_poems'] = poems_df['clean_poems'].astype('string')
+poems_df.head()
+
+#Remove Punctuation
+poems_df['clean_poems']= poems_df['clean_poems'].str.replace('[^\w\s]','')
+
+#Remove Stopwords
+from nltk.corpus import stopwords 
+stop = set(stopwords.words('english'))
+stop = set(stopwords.words('english'))
+poems_df['clean_poems'] = poems_df['clean_poems'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+poems_df.head()
+
+#Lemmatisation and Tokenisation
+def lemmatize_text(clean_poems):
+    return [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(clean_poems)]
+poems_df['clean_poems'] = poems_df.clean_poems.apply(lemmatize_text)
