@@ -1,15 +1,15 @@
 import requests
 import pandas as pd
-import itertools
-
 # BeautifulSoup is a Python library for pulling data out of HTML and XML files.
 import bs4
 from bs4 import BeautifulSoup
+from itertools import count
 
 # user defines max poems of < 46,000 to scrape from the Poetry Foundation website
 
-max_poems = 10
+max_poems = 25
 poem_count = 0
+page = max_poems//20 + 1
 
 # create lists
 titles_list = []
@@ -19,48 +19,44 @@ stanzas_list = []
 
 # scrape the browse page for poem html containers with relevant information
 
-while True:
-    for page_id in itertools.count(start=1):
-        page = requests.get(f'https://www.poetryfoundation.org/poems/browse#page={page_id}&sort_by=title')
-        soup = BeautifulSoup(page.content, 'lxml')
-        poems = soup.find_all('div', class_='c-feature c-mix-feature_shrinkwrap')
+for page_id in range (1, page):
+    r = requests.get(f'https://www.poetryfoundation.org/poems/browse#1=&page=2&sort_by=recently_added')
+    soup = BeautifulSoup(r.content, 'lxml')
+    poems = soup.find_all('div', class_='c-feature c-mix-feature_shrinkwrap')
 
-        # for each poem container, find the title, author, and link to the full poem
+    # for each poem container, find the title, author, and link to the full poem
 
-        for item in poems:
-            title = item.find('h2', class_='c-hdgSans c-hdgSans_2').text.strip()
-            titles_list.append(title)
+    for item in poems:
+        title = item.find('h2', class_='c-hdgSans c-hdgSans_2').text.strip()
+        titles_list.append(title)
 
-            author = item.find('span', class_='c-txt c-txt_attribution').text.strip().replace('By ', '')
-            authors_list.append(author)
+        author = item.find('span', class_='c-txt c-txt_attribution').text.strip().replace('By ', '')
+        authors_list.append(author)
 
-            link = item.find('a').get('href')
-            links_list.append(link)
+        link = item.find('a').get('href')
+        links_list.append(link)
 
-            # open each link and scrape the full poem
+        # open each link and find the full poem
 
-            r = requests.get(link)
-            soup = BeautifulSoup(r.content, 'lxml')
-            stanzas = soup.find('div', class_='c-feature-bd').text.strip()
-            stanzas_list.append(stanzas)
-            
-            #shows the number of poems finished parsing 
+        r = requests.get(link)
+        soup = BeautifulSoup(r.content, 'lxml')
+        stanzas = soup.find('div', class_='c-feature-bd').text.strip()
+        stanzas_list.append(stanzas)
 
-            poem_count += 1
-            print(f'Poems parsed: {poem_count}')
+        # create dataframe of all lists
 
-            # create dataframe of all lists that rewrites after ever poem parsed
+        poems_df = pd.DataFrame(
+            {'Titles': titles_list,
+             'Authors': authors_list,
+             'Links': links_list,
+             'Stanzas': stanzas_list
+             })
 
-            poems_df = pd.DataFrame(
-                {'Titles': titles_list,
-                 'Authors': authors_list,
-                 'Links': links_list,
-                 'Stanzas': stanzas_list
-                 })
-            
-            #set end clause to exit the while loop after the max poems are reached
-            
-            if poem_count == max_poems:
-                print(poems_df)
-                exit()
-print(poems_df)
+        # display the number of poems parsed after command loop
+
+        poem_count += 1
+        print(f'Poems parsed: {poem_count}')
+
+        if poem_count == max_poems:
+            poems_df.to_csv("poems_df.csv")
+            exit()
