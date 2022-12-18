@@ -1,8 +1,6 @@
 #Required Packages
 import pandas as pd
 import string
-import seaborn as sns
-import matplotlib.pyplot as plt
 import collections
 import nltk
 from nltk.tokenize import word_tokenize
