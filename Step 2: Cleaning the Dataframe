@@ -2,11 +2,11 @@
 ## Author: Neeraj Tom Savio (211863)
 
 #Required Packages
+#Installing these is a prerequisite for running the following code.
 import pandas as pd
 import string
 import collections
 import nltk
-from nltk.tokenize import word_tokenize
 from nltk.sentiment import SentimentIntensityAnalyzer
 nltk.download('punkt')
 lemmatizer = nltk.stem.WordNetLemmatizer()
@@ -18,20 +18,35 @@ nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 nltk.download('stopwords')
 
-#Import the Dataframe
-poems_df = pd.read_csv(r'/Users/neerajtomsavio/Downloads/poems_df.csv') #Insert the filepath
+##Importing the Dataframe
+poems_df = pd.read_csv(r'/Users/neerajtomsavio/Downloads/poems_df.csv') #Insert the filepath after r'
+#This converts the comma-separated values file into a dataframe using Pandas
+#Name_of_the_dataframe (Whatever you would like to name it) = pd.read_csv(r'filepath)
 
-#Check the Dataframe
+##Checking the Dataframe
 poems_df.head()
+#Name_of_the_dataframe.head()
 poems_df.info()
+#Name_of_the_dataframe.info()
+#This allows us to view the dataframe. 
+#The .head function allows us to view the first 5 rows. This enables us to locate which columns to analyse. 
+#The .info function shows how many NAs are in our dataframe and the type of values in our dataframe.
 
-#Droping NAs and converting column values to a string
+##Dropping NAs and converting column values to a string
 poems_df['Content'] = poems_df['Content'].astype('string')
+#Name['Column Name'] = NAME['Column Name'].astype('string') 
+#This would convert the values of a particular column to string.
 poems_df = poems_df.dropna()
-print(poems_df.info())
+#Name = Name.dropna() 
+#This would remove any NA values from the dataframe.
+#These steps are essential to enable further analysis. 
+poems_df.info()
+#Checking if the desired results have been achieved.
 
-#Lowercase
+##Lowercasing 
 poems_df['clean_poems'] = poems_df['Content'].str.lower()
+#Name['Column for cleaned content'] = Name[Column with uncleaned content'].str.lower()
+#
 poems_df['clean_poems'] = poems_df['clean_poems'].astype('string')
 poems_df.head()
 
@@ -40,7 +55,6 @@ poems_df['clean_poems']= poems_df['clean_poems'].str.replace('[^\w\s]','')
 
 #Remove Stopwords
 from nltk.corpus import stopwords 
-stop = set(stopwords.words('english'))
 stop = set(stopwords.words('english'))
 poems_df['clean_poems'] = poems_df['clean_poems'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
 poems_df.head()
