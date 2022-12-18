@@ -52,6 +52,7 @@ poems_df['clean_poems'] = poems_df['clean_poems'].astype('string')
 # Name['Column with cleaned content'] = Name['Column with cleaned content'].astype('string')
 #Converting the cleaned column values to string
 poems_df.head()
+poems_df.info()
 # Double-checking if the desired results have been achieved. 
 
 ##Removing Punctuation
@@ -59,7 +60,7 @@ poems_df['clean_poems'] = poems_df['clean_poems'].str.replace('[^\w\s]','')
 #Name['Column with cleaned content'] = Name['Column with cleaned content'].str.replace('[^\w\s]','')
 #Removing punctuation enables us to proceed with further cleaning.
 
-#Remove Stopwords
+##Removing Stopwords
 stop = set(stopwords.words('english'))
 #Define stopwords present in the NLTK library 
 #Stopwords_Name = set(stopwords.words('english'))
@@ -69,6 +70,9 @@ poems_df.head()
 #Double-checking if desired results have been obtained.
 
 ##Lemmatisation and Tokenisation
+poems_df = poems_df.dropna()
+#Drop any NAs
+
 def lemmatize_text(clean_poems):
     return [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(clean_poems)]
 poems_df['clean_poems'] = poems_df.clean_poems.apply(lemmatize_text)
