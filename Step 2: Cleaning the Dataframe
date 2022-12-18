@@ -17,6 +17,7 @@ nltk.download('omw-1.4')
 nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 nltk.download('stopwords')
+from nltk.corpus import stopwords 
 
 ##Importing the Dataframe
 poems_df = pd.read_csv(r'/Users/neerajtomsavio/Downloads/poems_df.csv') #Insert the filepath after r'
@@ -46,24 +47,38 @@ poems_df.info()
 ##Lowercasing 
 poems_df['clean_poems'] = poems_df['Content'].str.lower()
 #Name['Column for cleaned content'] = Name[Column with uncleaned content'].str.lower()
-#
+#This is to create a separate column for the clean contents. Helps to have a failsafe column (original).
 poems_df['clean_poems'] = poems_df['clean_poems'].astype('string')
+# Name['Column with cleaned content'] = Name['Column with cleaned content'].astype('string')
+#Converting the cleaned column values to string
 poems_df.head()
+# Double-checking if the desired results have been achieved. 
 
-#Remove Punctuation
-poems_df['clean_poems']= poems_df['clean_poems'].str.replace('[^\w\s]','')
+##Removing Punctuation
+poems_df['clean_poems'] = poems_df['clean_poems'].str.replace('[^\w\s]','')
+#Name['Column with cleaned content'] = Name['Column with cleaned content'].str.replace('[^\w\s]','')
+#Removing punctuation enables us to proceed with further cleaning.
 
 #Remove Stopwords
-from nltk.corpus import stopwords 
 stop = set(stopwords.words('english'))
+#Define stopwords present in the NLTK library 
+#Stopwords_Name = set(stopwords.words('english'))
 poems_df['clean_poems'] = poems_df['clean_poems'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))
+#Name['Column with cleaned content'] = Name['Column with cleaned content'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stopwords_name)]))
 poems_df.head()
+#Double-checking if desired results have been obtained.
 
-#Lemmatisation and Tokenisation
+##Lemmatisation and Tokenisation
 def lemmatize_text(clean_poems):
     return [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(clean_poems)]
 poems_df['clean_poems'] = poems_df.clean_poems.apply(lemmatize_text)
+#define the function to lemmatize tokenised text
+#Name['Column with cleaned content'] = Name.Column with cleaned content.apply(lemmatize_text) #You can use your own defined function to lemmatise
 
-#Converting Dataframe to XLS
+##Converting Dataframe to XLS
 poems2_df = pd.DataFrame(poems_df)
+#Saving the dataframe
+#NewName = pd.DataFrame(Name)
 poems2_df.to_excel('Clean_Poems.xlsx', index=False, header=True)
+#NewName.to_excel('Column with cleaned content', index=False, header=True)
+
