@@ -1,0 +1,30 @@
+import pandas as pd # to read excel file of poems
+# read by default 1st sheet of an excel file
+Poems = pd.read_excel('Clean_Poems.xlsx')
+ 
+print('Poems')
+
+# Import the xlrd module
+
+import xlrd
+
+# Open the Workbook
+workbook = xlrd.open_workbook("Clean_Poems.xlsx")
+
+# Open the worksheet
+worksheet = workbook.sheet_by_index(0)
+
+# Iterate the rows and columns
+for i in range(0, 6):
+    for j in range(0, 6):
+        # Print the cell values with tab space
+        print(worksheet.cell_value(i, j), end='\t')
+    print('')
+
+# conditional statement
+
+condition is input('poem_words_final')
+
+if condition is 'happy':
+    poem_words_final
+    print('Clean_Poems.xlsx', col3) # output function
